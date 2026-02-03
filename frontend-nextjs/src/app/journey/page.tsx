@@ -434,7 +434,7 @@ export default function JourneyPage() {
                             Back to Home
                         </Link>
                         <a
-                            href="https://github.com/Aryan1patel/AspectLens---Aspect-wise-sentiment-breakdown-and-Real-data-Insights"
+                            href="https://github.com/Aryan1patel/Aspectwise-sentiment-breakdown-and-Real-data-Insights"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-8 py-3 bg-white/10 backdrop-blur rounded-xl font-semibold hover:bg-white/20 transition-all"
