@@ -20,6 +20,7 @@ data/processed/*.json
 
 # Model files (too large for Git)
 *.joblib
+!backend/artifacts/sentiment_model.joblib  # Allow backend model for deployment
 *.pkl
 *.h5
 *.model
