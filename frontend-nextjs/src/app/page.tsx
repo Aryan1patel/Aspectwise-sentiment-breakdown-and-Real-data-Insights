@@ -59,7 +59,7 @@ export default function Home() {
               <em className="text-text-primary"> really</em> think about battery, camera, price, and more.
             </p>
 
-            <div className="flex flex-wrap gap-4 mb-12">
+            <div className="flex flex-wrap gap-4 mb-6">
               <a
                 href="#demo"
                 className="bg-gradient-primary text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all inline-flex items-center gap-2"
@@ -67,23 +67,29 @@ export default function Home() {
                 <span>Try Live Demo</span>
                 <span>→</span>
               </a>
-              <a
-                href="#insights"
-                className="px-8 py-4 bg-bg-elevated border border-white/10 rounded-xl font-semibold hover:bg-bg-card hover:border-white/20 transition-all"
-              >
-                View Insights
-              </a>
+
               <a
                 href="https://huggingface.co/DukeShadow/AspectLens-Aspectwise-sentiment-breakdown"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/30 transition-all inline-flex items-center gap-2 animate-pulse"
+                className="px-8 py-4 rounded-xl font-semibold text-white bg-white/5 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/12 hover:border-white/40 hover:shadow-xl hover:shadow-white/20 transition-all inline-flex items-center gap-2"
               >
                 <span>🤗</span>
                 <span>Use Model on HF</span>
-                <span>→</span>
+                <span className="opacity-70">→</span>
               </a>
             </div>
+
+            <div className="flex flex-wrap gap-4 mb-12">
+              <a
+                href="#insights"
+                className="px-6 py-3 bg-bg-elevated border border-white/10 rounded-xl font-medium text-sm hover:bg-bg-card hover:border-white/20 transition-all"
+              >
+                View Insights On Amazon Product Reviews
+              </a>
+            </div>
+
+
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-6 max-w-2xl">
