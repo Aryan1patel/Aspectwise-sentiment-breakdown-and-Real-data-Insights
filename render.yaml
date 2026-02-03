@@ -1,0 +1,23 @@
+services:
+  # Backend API
+  - type: web
+    name: aspectlens-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8000
+
+  # Frontend
+  - type: web
+    name: aspectlens-frontend
+    env: docker
+    dockerfilePath: ./frontend-nextjs/Dockerfile
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://aspectlens-backend.onrender.com
+      - key: PORT
+        value: 3000

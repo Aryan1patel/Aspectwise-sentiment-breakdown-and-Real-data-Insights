@@ -69,3 +69,6 @@ yarn-error.log*
 
 # Docker
 docker-compose.override.yml
+
+# Hugging Face model folder (deployed separately to HF)
+huggingface_model/
