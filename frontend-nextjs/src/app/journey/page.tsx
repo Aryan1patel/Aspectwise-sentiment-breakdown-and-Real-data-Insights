@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import JourneySection from '@/components/JourneySection';
-import CodeBlock from '@/components/CodeBlock';
 import Link from 'next/link';
 
 export default function JourneyPage() {
@@ -130,61 +129,6 @@ export default function JourneyPage() {
                                 </ul>
                             </div>
                         </div>
-
-                        <CodeBlock
-                            filename="notebooks/02_global_eda.ipynb"
-                            code={`import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load dataset
-df = pd.read_csv('mobile_reviews.csv')
-
-# Rating distribution
-df['Rating'].value_counts().sort_index().plot(kind='bar')
-plt.title('Rating Distribution')
-plt.xlabel('Rating')
-plt.ylabel('Count')
-plt.show()
-
-# Review length analysis
-df['review_length'] = df['reviewText'].str.len()
-df['review_length'].describe()`}
-                        />
-
-                        <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
-                            <h4 className="text-lg font-bold mb-4">Sample Raw Data</h4>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead className="border-b border-white/10">
-                                        <tr className="text-left">
-                                            <th className="py-2 px-3 font-semibold">Product Name</th>
-                                            <th className="py-2 px-3 font-semibold">Rating</th>
-                                            <th className="py-2 px-3 font-semibold">Review Text</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-text-secondary">
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">Samsung Galaxy S4</td>
-                                            <td className="py-2 px-3">4</td>
-                                            <td className="py-2 px-3">Great camera but terrible battery life...</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">iPhone 5S</td>
-                                            <td className="py-2 px-3">5</td>
-                                            <td className="py-2 px-3">Love the display quality and performance...</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">Motorola Moto G</td>
-                                            <td className="py-2 px-3">3</td>
-                                            <td className="py-2 px-3">Price is good but camera is disappointing...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p className="text-xs text-text-secondary mt-3">
-                                <strong>Shape:</strong> (200,000 rows × 8 columns)
-                            </p>
-                        </div>
                     </div>
                 </JourneySection>
 
@@ -226,34 +170,6 @@ df['review_length'].describe()`}
                                 </li>
                             </ol>
                         </div>
-
-                        <CodeBlock
-                            filename="notebooks/04_preprocessing.ipynb"
-                            code={`import re
-
-def clean_text(text):
-    """Clean and normalize review text"""
-    if pd.isna(text):
-        return ""
-    
-    # Lowercase
-    text = text.lower()
-    
-    # Remove HTML tags
-    text = re.sub(r'<[^>]+>', '', text)
-    
-    # Remove special characters but keep sentence structure
-    text = re.sub(r'[^a-z0-9\\s.,!?]', '', text)
-    
-    # Normalize whitespace
-    text = re.sub(r'\\s+', ' ', text).strip()
-    
-    return text
-
-# Apply cleaning
-df['clean_review'] = df['reviewText'].apply(clean_text)
-df = df[df['clean_review'].str.len() > 10]  # Remove very short reviews`}
-                        />
 
                         <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
                             <h4 className="text-lg font-bold mb-4">Data Transformation</h4>
@@ -316,86 +232,10 @@ df = df[df['clean_review'].str.len() > 10]  # Remove very short reviews`}
                             </div>
                         </div>
 
-                        <CodeBlock
-                            filename="backend/api.py - Aspect Detection"
-                            code={`# Aspect keyword dictionary
-ASPECT_DICT = {
-    "battery": ["battery", "battery life", "charge", "charging"],
-    "camera": ["camera", "photo", "picture", "video"],
-    "display": ["screen", "display", "resolution"],
-    "performance": ["performance", "speed", "lag", "slow", "fast"],
-    "build": ["build quality", "design", "material"],
-    "price": ["price", "cost", "value", "worth"]
-}
-
-def split_sentences(text):
-    """Split review into sentences"""
-    return [s.strip() for s in re.split(r"[.!?]", text) if s.strip()]
-
-def split_clauses(sentence):
-    """Split sentence on contrast words (CRITICAL for ABSA)"""
-    return [
-        s.strip()
-        for s in re.split(
-            r"\\bbut\\b|\\bhowever\\b|\\balthough\\b|\\bthough\\b",
-            sentence,
-            flags=re.IGNORECASE
-        )
-        if s.strip()
-    ]
-
-def detect_aspects(text):
-    """Detect which aspects are mentioned in text"""
-    text = text.lower()
-    return [
-        aspect
-        for aspect, keywords in ASPECT_DICT.items()
-        if any(k in text for k in keywords)
-    ]`}
-                        />
-
-                        <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
-                            <h4 className="text-lg font-bold mb-4">Aspect Detection Results</h4>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead className="border-b border-white/10">
-                                        <tr className="text-left">
-                                            <th className="py-2 px-3 font-semibold">Sentence</th>
-                                            <th className="py-2 px-3 font-semibold">Detected Aspects</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-text-secondary text-xs">
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">"great camera"</td>
-                                            <td className="py-2 px-3">
-                                                <span className="px-2 py-1 bg-primary/20 text-primary rounded">camera</span>
-                                            </td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">"terrible battery"</td>
-                                            <td className="py-2 px-3">
-                                                <span className="px-2 py-1 bg-primary/20 text-primary rounded">battery</span>
-                                            </td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-3">"screen is beautiful and performance is fast"</td>
-                                            <td className="py-2 px-3">
-                                                <span className="px-2 py-1 bg-primary/20 text-primary rounded mr-1">display</span>
-                                                <span className="px-2 py-1 bg-primary/20 text-primary rounded">performance</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p className="text-xs text-text-secondary mt-3">
-                                <strong>New Columns:</strong> sentence, aspect, aspect_count
-                            </p>
-                        </div>
-
                         <div className="p-4 bg-success/10 border border-success/30 rounded-lg">
                             <p className="text-sm">
                                 <strong className="text-success">Why rule-based?</strong> Provides explainability,
-                                fast inference ({'<'}100ms), and no training data required. Perfect for production deployment.
+                                fast inference (&lt;100ms), and no training data required. Perfect for production deployment.
                             </p>
                         </div>
                     </div>
@@ -418,139 +258,23 @@ def detect_aspects(text):
                             <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
                                 <h4 className="text-lg font-bold mb-3">Model Architecture</h4>
                                 <ul className="space-y-2 text-text-secondary text-sm">
-                                    <li><strong className="text-text-primary">Vectorization:</strong> TF-IDF (max 5000 features)</li>
+                                    <li><strong className="text-text-primary">Vectorization:</strong> TF-IDF (max 8000 features)</li>
                                     <li><strong className="text-text-primary">Classifier:</strong> Logistic Regression</li>
                                     <li><strong className="text-text-primary">Classes:</strong> Positive, Negative, Neutral</li>
-                                    <li><strong className="text-text-primary">Training Size:</strong> ~150K samples</li>
+                                    <li><strong className="text-text-primary">Training Size:</strong> ~1.2M samples</li>
                                 </ul>
                             </div>
 
                             <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
                                 <h4 className="text-lg font-bold mb-3">Performance</h4>
                                 <ul className="space-y-2 text-text-secondary text-sm">
-                                    <li><strong className="text-success">Overall Accuracy:</strong> 90.0%</li>
-                                    <li><strong className="text-success">Positive Class:</strong> 100% accuracy</li>
-                                    <li><strong className="text-warning">Negative Class:</strong> 80% accuracy</li>
-                                    <li><strong className="text-success">Neutral Class:</strong> 90% accuracy</li>
-                                    <li><strong className="text-success">Inference Time:</strong> {'<'}100ms</li>
+                                    <li><strong className="text-success">Overall Accuracy:</strong> 76%</li>
+                                    <li><strong className="text-success">Positive Class:</strong> 96% precision</li>
+                                    <li><strong className="text-warning">Negative Class:</strong> 57% precision</li>
+                                    <li><strong className="text-success">Inference Time:</strong> &lt;100ms</li>
+                                    <li><strong className="text-success">Model Size:</strong> 500KB</li>
                                 </ul>
                             </div>
-                        </div>
-
-                        <CodeBlock
-                            filename="notebooks/06_sentiment_model_training.ipynb"
-                            code={`from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
-import joblib
-
-# Create pipeline
-pipeline = Pipeline([
-    ('tfidf', TfidfVectorizer(max_features=5000, ngram_range=(1, 2))),
-    ('clf', LogisticRegression(max_iter=1000, random_state=42))
-])
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    df['clean_review'], 
-    df['sentiment'],
-    test_size=0.2,
-    random_state=42
-)
-
-# Train model
-pipeline.fit(X_train, y_train)
-
-# Evaluate
-accuracy = pipeline.score(X_test, y_test)
-print(f"Accuracy: {accuracy*100:.2f}%")
-
-# Save model
-joblib.dump(pipeline, 'sentiment_model.joblib')`}
-                        />
-
-                        <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
-                            <h4 className="text-lg font-bold mb-4">Final ABSA Results (df.head())</h4>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-xs">
-                                    <thead className="border-b border-white/10">
-                                        <tr className="text-left">
-                                            <th className="py-2 px-2 font-semibold">Product</th>
-                                            <th className="py-2 px-2 font-semibold">Rating</th>
-                                            <th className="py-2 px-2 font-semibold">Sentence</th>
-                                            <th className="py-2 px-2 font-semibold">Aspect</th>
-                                            <th className="py-2 px-2 font-semibold">Sentiment</th>
-                                            <th className="py-2 px-2 font-semibold">Confidence</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-text-secondary">
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-2">Galaxy S4</td>
-                                            <td className="py-2 px-2">4</td>
-                                            <td className="py-2 px-2">great camera</td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">camera</span>
-                                            </td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-success/20 text-success rounded text-xs">positive</span>
-                                            </td>
-                                            <td className="py-2 px-2">98.2%</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-2">Galaxy S4</td>
-                                            <td className="py-2 px-2">4</td>
-                                            <td className="py-2 px-2">terrible battery</td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">battery</span>
-                                            </td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-error/20 text-error rounded text-xs">negative</span>
-                                            </td>
-                                            <td className="py-2 px-2">94.7%</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-2">iPhone 5S</td>
-                                            <td className="py-2 px-2">5</td>
-                                            <td className="py-2 px-2">love the display quality</td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">display</span>
-                                            </td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-success/20 text-success rounded text-xs">positive</span>
-                                            </td>
-                                            <td className="py-2 px-2">99.1%</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-2">Moto G</td>
-                                            <td className="py-2 px-2">3</td>
-                                            <td className="py-2 px-2">price is good</td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">price</span>
-                                            </td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-success/20 text-success rounded text-xs">positive</span>
-                                            </td>
-                                            <td className="py-2 px-2">87.3%</td>
-                                        </tr>
-                                        <tr className="border-b border-white/5">
-                                            <td className="py-2 px-2">Moto G</td>
-                                            <td className="py-2 px-2">3</td>
-                                            <td className="py-2 px-2">camera is disappointing</td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">camera</span>
-                                            </td>
-                                            <td className="py-2 px-2">
-                                                <span className="px-2 py-0.5 bg-error/20 text-error rounded text-xs">negative</span>
-                                            </td>
-                                            <td className="py-2 px-2">91.8%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p className="text-xs text-text-secondary mt-3">
-                                <strong>Final Dataset:</strong> 478,127,468 rows (sentence-level) • Ready for business analysis
-                            </p>
                         </div>
 
                         <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg">
@@ -599,42 +323,6 @@ joblib.dump(pipeline, 'sentiment_model.joblib')`}
                                 </p>
                             </div>
                         </div>
-
-                        <CodeBlock
-                            filename="notebooks/07_business_analysis.ipynb"
-                            code={`# Aspect sentiment distribution
-dist = (
-    df.groupby(['aspect', 'sentiment'])
-      .size()
-      .reset_index(name='count')
-)
-dist['percentage'] = (
-    dist.groupby('aspect')['count']
-    .transform(lambda x: round(100 * x / x.sum(), 2))
-)
-
-# Rating mismatch analysis
-high_rating = df[df['Rating'] >= 4]
-negative = high_rating[high_rating['sentiment'] == 'negative']
-mismatch_rate = round(
-    100 * negative['reviewID'].nunique() / high_rating['reviewID'].nunique(), 
-    2
-)
-print(f"Mismatch rate: {mismatch_rate}%")
-
-# Root cause keywords
-from collections import Counter
-negative_reviews = df[df['sentiment'] == 'negative']
-for aspect in ['battery', 'camera', 'price']:
-    texts = negative_reviews[negative_reviews['aspect'] == aspect]['sentence']
-    words = []
-    for text in texts:
-        tokens = re.findall(r'\\b[a-z]{3,}\\b', str(text).lower())
-        words.extend([w for w in tokens if w in PROBLEM_WORDS])
-    
-    top_keywords = Counter(words).most_common(10)
-    print(f"{aspect}: {top_keywords}")`}
-                        />
                     </div>
                 </JourneySection>
 
@@ -642,16 +330,16 @@ for aspect in ['battery', 'camera', 'price']:
                 <JourneySection
                     number="07"
                     title="Production Deployment"
-                    subtitle="FastAPI backend + Next.js frontend"
+                    subtitle="FastAPI backend + Next.js frontend + Hugging Face model"
                     icon="🚀"
                 >
                     <div className="space-y-6">
                         <p className="text-text-secondary leading-relaxed">
-                            Built a production-ready web application with FastAPI backend for ML inference
-                            and Next.js frontend for interactive visualization.
+                            Built a production-ready web application with FastAPI backend for ML inference,
+                            Next.js frontend for interactive visualization, and deployed the model to Hugging Face.
                         </p>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-3 gap-6">
                             <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
                                 <h4 className="text-lg font-bold mb-4">Backend (FastAPI)</h4>
                                 <ul className="space-y-2 text-text-secondary text-sm">
@@ -661,15 +349,11 @@ for aspect in ['battery', 'camera', 'price']:
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-success">✓</span>
-                                        <span>CORS enabled for frontend integration</span>
+                                        <span>Deployed on Render</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-success">✓</span>
-                                        <span>Model loaded once at startup</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-success">✓</span>
-                                        <span>Response time: {'<'}100ms</span>
+                                        <span>Response time: &lt;100ms</span>
                                     </li>
                                 </ul>
                             </div>
@@ -683,49 +367,33 @@ for aspect in ['battery', 'camera', 'price']:
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-success">✓</span>
-                                        <span>Tailwind CSS for styling</span>
+                                        <span>Deployed on Vercel</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-success">✓</span>
-                                        <span>Chart.js for visualizations</span>
+                                        <span>Framer Motion animations</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="p-6 bg-bg-elevated rounded-xl border border-white/10">
+                                <h4 className="text-lg font-bold mb-4">Model (Hugging Face)</h4>
+                                <ul className="space-y-2 text-text-secondary text-sm">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-success">✓</span>
+                                        <span>Public model repository</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-success">✓</span>
-                                        <span>Framer Motion for animations</span>
+                                        <span>Complete inference pipeline</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-success">✓</span>
+                                        <span>Ready for integration</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-
-                        <CodeBlock
-                            filename="backend/api.py - ABSA Endpoint"
-                            language="python"
-                            code={`@app.post("/absa")
-def analyze_review(data: ReviewInput):
-    sentences = split_sentences(data.review)
-    aspect_results = defaultdict(list)
-    
-    for sentence in sentences:
-        clauses = split_clauses(sentence)
-        
-        for clause in clauses:
-            aspects = detect_aspects(clause)
-            if not aspects:
-                continue
-            
-            pred = sentiment_model.predict([clause])[0]
-            probs = sentiment_model.predict_proba([clause])[0]
-            confidence = float(max(probs))
-            
-            for aspect in aspects:
-                aspect_results[aspect].append({
-                    "sentiment": pred,
-                    "confidence": round(confidence, 3),
-                    "sentence": clause
-                })
-    
-    return aggregate(aspect_results)`}
-                        />
 
                         <div className="flex gap-4">
                             <Link
@@ -735,12 +403,12 @@ def analyze_review(data: ReviewInput):
                                 Try Live Demo →
                             </Link>
                             <a
-                                href="http://localhost:8000/docs"
+                                href="https://huggingface.co/DukeShadow/AspectLens-Aspectwise-sentiment-breakdown"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex-1 px-6 py-3 bg-bg-elevated border border-white/10 rounded-xl font-semibold hover:bg-bg-card hover:border-white/20 transition-all text-center"
+                                className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/30 transition-all text-center"
                             >
-                                View API Docs
+                                🤗 Use Model on HF
                             </a>
                         </div>
                     </div>
@@ -766,7 +434,7 @@ def analyze_review(data: ReviewInput):
                             Back to Home
                         </Link>
                         <a
-                            href="https://github.com"
+                            href="https://github.com/Aryan1patel/AspectLens---Aspect-wise-sentiment-breakdown-and-Real-data-Insights"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-8 py-3 bg-white/10 backdrop-blur rounded-xl font-semibold hover:bg-white/20 transition-all"

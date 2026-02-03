@@ -48,7 +48,7 @@ export default function Home() {
             </div>
 
             <h1 className="text-3xl md:text-7xl font-extrabold mb-6 leading-tight">
-              Uncovering Product Insights 
+              Uncovering Product Insights
               <br />
               <span className="gradient-text">hidden behind star ratings</span>
             </h1>
@@ -72,6 +72,16 @@ export default function Home() {
                 className="px-8 py-4 bg-bg-elevated border border-white/10 rounded-xl font-semibold hover:bg-bg-card hover:border-white/20 transition-all"
               >
                 View Insights
+              </a>
+              <a
+                href="https://huggingface.co/DukeShadow/AspectLens-Aspectwise-sentiment-breakdown"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/30 transition-all inline-flex items-center gap-2 animate-pulse"
+              >
+                <span>🤗</span>
+                <span>Use Model on HF</span>
+                <span>→</span>
               </a>
             </div>
 
